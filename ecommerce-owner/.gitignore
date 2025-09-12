@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Logs
+*.log
+
+# Environment files
+.env
+backend/.env
+frontend/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# S3 credentials
+*.pem
+
+# Misc
+.vscode/
+coverage/
+
+# React static assets
+frontend/public/logo.png
