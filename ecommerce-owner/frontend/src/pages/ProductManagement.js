@@ -31,6 +31,8 @@ const ProductManagement = () => {
 			setLoading(true);
 			const response = await productsAPI.getAll(searchTerm);
 			setProducts(response.data);
+			console.log('Fetched products:', response.data);
+			console.log('Variants : ', response.data.variants);
 		} catch (error) {
 			console.error('Error fetching products:', error);
 		} finally {
@@ -88,11 +90,8 @@ const ProductManagement = () => {
 				<div className="filters">
 					<div className="form-group" style={{ marginBottom: '0', flex: 1 }}>
 						<div style={{ position: 'relative' }}>
-							<input
-								type="text"
-				className="form-control"
-				placeholder="Search products..."
-				value={searchTerm}
+							<input type="text" className="form-control" placeholder="Search products..."
+							    value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
 								style={{ paddingLeft: '35px' }}
 							/>

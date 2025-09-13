@@ -10,16 +10,39 @@ router.get('/', dummyAuth, ownerOnly, async (req, res) => {
 	try {
 		const { search } = req.query;
 		let query = {};
-    
 		if (search) {
 			query.name = { $regex: search, $options: 'i' };
 		}
-    
 		const products = await Product.find(query)
 			.populate('collection')
 			.sort({ createdAt: -1 });
-    
-		res.json(products);
+
+		// For each product, fetch its quantities and group by color
+		const productsWithVariants = await Promise.all(products.map(async (product) => {
+			const quantities = await ProductQuantity.find({ product: product._id });
+			const variantsMap = {};
+			quantities.forEach(qty => {
+				if (!variantsMap[qty.colour]) {
+					variantsMap[qty.colour] = {
+						colour: qty.colour,
+						price: qty.price,
+						images: qty.images || [],
+						sizes: []
+					};
+				}
+				variantsMap[qty.colour].sizes.push({
+					size: qty.size,
+					qty: qty.qty
+				});
+			});
+			const variants = Object.values(variantsMap);
+			return {
+				...product.toObject(),
+				variants
+			};
+		}));
+
+		res.json(productsWithVariants);
 	} catch (error) {
 		res.status(500).json({ message: error.message });
 	}

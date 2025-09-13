@@ -184,6 +184,8 @@ const ProductModal = ({ product, collections, onClose, onSave }) => {
 						}))
 					}))
 				});
+
+				console.log('Product created:', formData);
 			}
 			onSave();
 		} catch (error) {
